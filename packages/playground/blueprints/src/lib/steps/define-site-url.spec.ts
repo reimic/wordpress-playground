@@ -24,13 +24,16 @@ describe('Blueprint step defineSiteUrl', () => {
 
 		// expect(php.fileExists(wpConfigPath)).toBe(false);
 		// const wpConfigBefore = php.readFileAsText(wpConfigPath);
-		// expect(wpConfigBefore).toContain(/bla/);
+		// expect(wpConfigBefore).toContain(/bla/);\
+
 		php.writeFile(`${docroot}/wp-config.php`, ``);
 		const siteUrl = 'http://test.url';
 		defineSiteUrl(php, {
 			siteUrl: siteUrl,
 		});
 
+		// const tmp = php.readFileAsText('/tmp/code.php');
+		// console.log(tmp);
 		// where does this create the wp-config.php file?
 		// what is the optimal way to browse all files?
 		// how to debug the code, add breakpoints and see that the values at certain points are?

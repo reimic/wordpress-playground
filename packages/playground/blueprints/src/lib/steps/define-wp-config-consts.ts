@@ -101,6 +101,7 @@ export async function rewriteDefineCalls(
 		throwOnError: true,
 		code: `${rewriteWpConfigToDefineConstants}
 		// what does this /tmp/ refer to?
+		// is this only to reformat the wp-config?
 	$wp_config_path = '/tmp/code.php';
 	$wp_config = file_get_contents($wp_config_path);
 	$new_wp_config = rewrite_wp_config_to_define_constants($wp_config, ${js.consts});
