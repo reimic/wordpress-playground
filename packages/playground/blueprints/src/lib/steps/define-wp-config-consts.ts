@@ -56,13 +56,13 @@ export const defineWpConfigConsts: StepHandler<
 	DefineWpConfigConstsStep
 > = async (playground, { consts, method = 'rewrite-wp-config' }) => {
 	switch (method) {
-		case 'define-before-run':
-			await defineBeforeRun(playground, consts);
-			break;
 		case 'rewrite-wp-config': {
 			const documentRoot = await playground.documentRoot;
 			const wpConfigPath = joinPaths(documentRoot, '/wp-config.php');
 			const wpConfig = await playground.readFileAsText(wpConfigPath);
+			// it appears it is a must for the file to exist
+			// but is it always the case? most definietely not in tests
+
 			const updatedWpConfig = await rewriteDefineCalls(
 				playground,
 				wpConfig,
@@ -71,6 +71,9 @@ export const defineWpConfigConsts: StepHandler<
 			await playground.writeFile(wpConfigPath, updatedWpConfig);
 			break;
 		}
+		case 'define-before-run':
+			await defineBeforeRun(playground, consts);
+			break;
 		default:
 			throw new Error(`Invalid method: ${method}`);
 	}
@@ -97,6 +100,7 @@ export async function rewriteDefineCalls(
 	await playground.run({
 		throwOnError: true,
 		code: `${rewriteWpConfigToDefineConstants}
+		// what does this /tmp/ refer to?
 	$wp_config_path = '/tmp/code.php';
 	$wp_config = file_get_contents($wp_config_path);
 	$new_wp_config = rewrite_wp_config_to_define_constants($wp_config, ${js.consts});
